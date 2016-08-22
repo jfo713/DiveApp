@@ -15,6 +15,9 @@ class UpdateProfileTableViewController: UITableViewController, UIImagePickerCont
     var publicDB :CKDatabase!
     var privateDB :CKDatabase!
     
+    var photoAsset :CKAsset!
+    
+    
     let currentUser :String! = NSUserDefaults.standardUserDefaults().stringForKey("currentUserName")
 
     @IBOutlet weak var firstNameTextField :UITextField!
@@ -94,14 +97,37 @@ class UpdateProfileTableViewController: UITableViewController, UIImagePickerCont
                     self.contactPhoneTextField.text = currentRecord.objectForKey("emergencyPHone") as? String
                     
                     let birthDate = currentRecord.objectForKey("birthDate") as? NSDate
-                    let formatter = NSDateFormatter()
-                    formatter.dateFormat = "dd/MM/yyyy"
-                    let stringDate :String = formatter.stringFromDate(birthDate!)
-                    self.dobTextField.text = stringDate
+                    if birthDate != nil {
+                        
+                        let formatter = NSDateFormatter()
+                        formatter.dateFormat = "dd/MM/yyyy"
+                        let stringDate :String = formatter.stringFromDate(birthDate!)
+                        self.dobTextField.text = stringDate
+                        
+                    }
+                    
+                 let profilePhoto = currentRecord.objectForKey("profilePhoto") as? CKAsset
+                    
+                    var image :UIImage!
+                    var photoURL = NSURL()
+                    if profilePhoto != nil {
+                    
+                        image = UIImage(contentsOfFile: (profilePhoto?.fileURL.path!)!)
+                        photoURL = self.saveImageToFile(image!)
+                        self.photoAsset = CKAsset(fileURL: photoURL)
+                        
+                        
+                    }
+                    
+                    else {
+                    
+                            image = UIImage(named: "cameraIcon")
+                        
+                        }
+                    
+                    self.profilePicture.image = image
                     
                 })
-                
-              
                 
             }
         
@@ -131,6 +157,8 @@ class UpdateProfileTableViewController: UITableViewController, UIImagePickerCont
                 let birthDate = dateFormatter.dateFromString(birthDateString!)
                 let currentRecord = records![0]
                 
+                
+                
                 currentRecord.setObject(self.firstNameTextField.text, forKey: "firstName")
                 currentRecord.setObject(self.miTextField.text, forKey: "middleInitial")
                 currentRecord.setObject(self.lastNameTextField.text, forKey: "lastName")
@@ -145,6 +173,8 @@ class UpdateProfileTableViewController: UITableViewController, UIImagePickerCont
                 currentRecord.setObject(self.contactRelationshipTextField.text, forKey: "emergencyRelationship")
                 currentRecord.setObject(self.contactPhoneTextField.text, forKey: "emergencyPhone")
                 
+                currentRecord.setObject(self.photoAsset, forKey:"profilePhoto")
+                
                 self.publicDB.saveRecord(currentRecord, completionHandler: ( {returnRecord, error in
                     
                     if (error != nil) {
@@ -155,7 +185,7 @@ class UpdateProfileTableViewController: UITableViewController, UIImagePickerCont
                     else {
                     
                         self.displayAlertMessage("Record Updated Successfully")
-                    
+                        
                     }
                     
                 }))
@@ -163,6 +193,7 @@ class UpdateProfileTableViewController: UITableViewController, UIImagePickerCont
             }
         
         }
+        
     }
     
     @IBAction func openImageOptions() {
@@ -204,11 +235,36 @@ class UpdateProfileTableViewController: UITableViewController, UIImagePickerCont
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         
+        var photoURL = NSURL()
+        
         let originalImage = info[UIImagePickerControllerOriginalImage] as? UIImage
+        
         
         self.profilePicture.image = originalImage
         
+        dispatch_async(dispatch_get_main_queue()) {
+            
+            photoURL = self.saveImageToFile(self.profilePicture.image!)
+        
+            self.photoAsset = CKAsset(fileURL: photoURL)
+            
+        }
+        
         picker.dismissViewControllerAnimated(true, completion:nil)
+        
+    }
+    
+    func saveImageToFile(image :UIImage) -> NSURL {
+        
+        let directoryPaths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
+        
+        let documentDirectory :AnyObject = directoryPaths[0]
+        
+        let filePath = documentDirectory.stringByAppendingPathComponent("profileImage.png")
+        
+        UIImageJPEGRepresentation(image, 0.2)!.writeToFile(filePath, atomically: true)
+        
+        return NSURL.fileURLWithPath(filePath)
         
     }
 

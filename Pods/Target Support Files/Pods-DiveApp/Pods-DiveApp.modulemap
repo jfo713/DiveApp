@@ -1,0 +1,6 @@
+framework module Pods_DiveApp {
+  umbrella header "Pods-DiveApp-umbrella.h"
+
+  export *
+  module * { export * }
+}
