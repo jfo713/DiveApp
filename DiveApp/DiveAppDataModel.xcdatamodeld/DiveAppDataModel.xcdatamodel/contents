@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15G31" minimumToolsVersion="Xcode 7.0">
+    <entity name="ClassDate" representedClassName=".DateObject" syncable="YES">
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <relationship name="module" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Module" inverseName="date" inverseEntity="Module" syncable="YES"/>
+    </entity>
+    <entity name="Module" syncable="YES">
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="date" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ClassDate" inverseName="module" inverseEntity="ClassDate" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="ClassDate" positionX="-261" positionY="-135" width="128" height="73"/>
+        <element name="Module" positionX="-0" positionY="-100" width="128" height="73"/>
+    </elements>
+</model>

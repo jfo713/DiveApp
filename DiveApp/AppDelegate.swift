@@ -7,17 +7,56 @@
 //
 
 import UIKit
+import CoreData
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    
+    var managedObjectContext :NSManagedObjectContext!
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        setupCoreData()
+        
+        guard let upcomingClassesViewController = self.window?.rootViewController as? UpcomingClassesViewController else {fatalError("Invalid Root View Controller")}
+        
+        upcomingClassesViewController.managedObjectContext = self.managedObjectContext
+        
         return true
     }
+    
+    private func setupCoreData() {
+        
+        guard let url = NSBundle.mainBundle().URLForResource("DiveAppDataModel", withExtension:"momd") else {fatalError("Invalid URL")}
+        
+        guard let managedObjectModel = NSManagedObjectModel(contentsOfURL: url) else {fatalError("Invalid Object Model")}
+        
+        let persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
+        
+        let fileManager = NSFileManager()
+        
+        guard let documentsURL = fileManager.URLsForDirectory(NSSearchPathDirectory.DocumentDirectory, inDomains:.UserDomainMask).first else {fatalError("Invalid Document Directory")}
+        
+        let storeURL = documentsURL.URLByAppendingPathComponent("DiveAppDatabase.sqlite")
+        
+        print(storeURL)
+        
+        let options = [NSMigratePersistentStoresAutomaticallyOption: true, NSInferMappingModelAutomaticallyOption: true]
+        
+        try! persistentStoreCoordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: storeURL, options: options)
+        
+        let type = NSManagedObjectContextConcurrencyType.MainQueueConcurrencyType
+        
+        self.managedObjectContext = NSManagedObjectContext(concurrencyType: type)
+        
+        self.managedObjectContext.persistentStoreCoordinator = persistentStoreCoordinator
+        
+    }
+    
+        
 
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

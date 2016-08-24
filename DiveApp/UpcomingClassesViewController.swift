@@ -8,20 +8,36 @@
 
 import UIKit
 import JTAppleCalendar
+import CoreData
+import CloudKit
 
-class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+protocol bookDateDelegate :class {
+    
+    func bookDates(addDates: [NSDate])
+    
+}
+
+class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, bookDateDelegate {
 
     @IBOutlet weak var calendarView :JTAppleCalendarView!
     @IBOutlet weak var monthLabel :UILabel!
-    @IBOutlet weak var dateSelectedLabel :UILabel!
     
     @IBOutlet weak var selectedClassesTableView :UITableView!
+    
+    let cellReuseIdentifier = "CellView"
+    
+    var container :CKContainer!
+    var publicDB :CKDatabase!
+    var privateDB :CKDatabase!
+    
+    var managedObjectContext :NSManagedObjectContext!
+    var fetchedResultsController :NSFetchedResultsController!
+    var dateObject :DateObject!
     
     let formatter = NSDateFormatter()
     let calendar :NSCalendar! = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
     
     var selectedDate = NSDate()
-    
     var selectedDates = [NSDate]()
     
     override func viewDidLoad() {
@@ -30,10 +46,10 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
         calendarView.delegate = self
         calendarView.dataSource = self
         calendarView.registerCellViewXib(fileName: "cellView")
+       
         
         selectedClassesTableView.delegate = self
         selectedClassesTableView.dataSource = self
-        
         
         self.calendarView.cellInset = CGPoint(x: 1, y: 1)
         calendarView.reloadData()
@@ -43,10 +59,19 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
             let currentDate = self.calendarView.currentCalendarDateSegment()
         
             self.setupViewsOfCalendar(currentDate.dateRange.start, endDate: currentDate.dateRange.end)
-            }
-        
-                
         }
+        
+        let fetchRequest = NSFetchRequest(entityName: "ClassDate")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+        
+        self.fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+        
+        self.fetchedResultsController.delegate = self
+        
+        try! self.fetchedResultsController.performFetch()
+        
+    }
+
 
     func setupViewsOfCalendar(startDate: NSDate, endDate: NSDate) {
         let date = NSDate()
@@ -55,9 +80,54 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
         let monthName = NSDateFormatter().monthSymbols[(month-1) % 12]
         let year = NSCalendar.currentCalendar().component(NSCalendarUnit.Year, fromDate: date)
         monthLabel.text = monthName + " " + String(year)
+    }
+    
+    
+     
+    
+    @IBAction func saveButton() {
+        
+        bookDates(selectedDates)
+        
+        guard let testDates = self.fetchedResultsController.fetchedObjects else {
+            fatalError("Error Fetching Results")
+        }
+        
+        print(testDates.count)
+    }
+    
+    func bookDates(addDates :[NSDate]) {
+        
+        for date in addDates {
+            
+            guard let newDate = NSEntityDescription.insertNewObjectForEntityForName("ClassDate", inManagedObjectContext: self.managedObjectContext) as? DateObject else {fatalError("dateObject failed to insert")}
+
+            newDate.date = date
+        
+        try! self.managedObjectContext.save()
         
         }
+        
+    }
     
+    @IBAction func clearButton() {
+        
+//        let fetchRequest = NSFetchRequest(entityName: "ClassDate")
+//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+//        
+//        let dateObjects = try! self.managedObjectContext.executeFetchRequest(fetchRequest) as? [DateObject]
+//        
+//        for dt in dateObjects! {
+//                 self.managedObjectContext.deleteObject(dt)
+//        
+//       try!  self.managedObjectContext.save()
+//        }
+        
+        selectedDates.removeAll()
+        selectedClassesTableView.reloadData()
+        
+        
+    }
     
     override func didReceiveMemoryWarning() {
             super.didReceiveMemoryWarning()
@@ -71,6 +141,9 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
 extension UpcomingClassesViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDelegate {
     
     func configureCalendar(calendar: JTAppleCalendarView) -> (startDate :NSDate, endDate :NSDate, numberOfRows :Int, calendar :NSCalendar) {
+        
+        calendarView.registerCellViewClass(fileName: "CellView")
+        
         
         formatter.dateFormat = "yyyy MM dd"
         
@@ -112,7 +185,7 @@ extension UpcomingClassesViewController: JTAppleCalendarViewDataSource, JTAppleC
         let formatter = NSDateFormatter()
         formatter.dateFormat = "dd/MM/yyyy"
         let stringDate = formatter.stringFromDate(selectedDate)
-        dateSelectedLabel.text = stringDate
+        print(stringDate)
         
        self.selectedClassesTableView.reloadData()
         

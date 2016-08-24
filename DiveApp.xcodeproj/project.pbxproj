@@ -22,10 +22,11 @@
 		2B28AD801D624D7900F36628 /* LoggedInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B28AD7F1D624D7900F36628 /* LoggedInViewController.swift */; };
 		2B28AD881D63706D00F36628 /* UpdateProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B28AD871D63706D00F36628 /* UpdateProfileTableViewController.swift */; };
 		2B2AA40E1D6643CE00496166 /* CalendarHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2AA40D1D6643CE00496166 /* CalendarHeaderView.swift */; };
+		2B5BA1961D6B9067006FEDDB /* DiveAppDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2B5BA1941D6B9067006FEDDB /* DiveAppDataModel.xcdatamodeld */; };
+		2B5BA1981D6BC03E006FEDDB /* dateObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5BA1971D6BC03E006FEDDB /* dateObject.swift */; };
 		2BA6AF741D674AB10057D835 /* UpcomingClassesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA6AF731D674AB10057D835 /* UpcomingClassesViewController.swift */; };
 		2BA6AF781D6B49A50057D835 /* AnimationClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA6AF771D6B49A50057D835 /* AnimationClass.swift */; };
 		2BA6AF7D1D6B867C0057D835 /* ClassModuleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA6AF7C1D6B867C0057D835 /* ClassModuleCell.swift */; };
-		2BA6AF7F1D6B8C550057D835 /* SelectedClassesTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA6AF7E1D6B8C550057D835 /* SelectedClassesTableView.swift */; };
 		31EBB2450DD99C406B0BB254 /* Pods_DiveAppUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC46225F270FA14AFE6B3A0E /* Pods_DiveAppUITests.framework */; };
 		33B4C82D4BF6F32D07DAA4D1 /* Pods_DiveAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2BA8A0C4B4EDE6B22305059 /* Pods_DiveAppTests.framework */; };
 		E982FF81CF6C5B7E7D2D6DE1 /* Pods_DiveApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C740E09FF8B8868A8E1F9C9 /* Pods_DiveApp.framework */; };
@@ -73,10 +74,11 @@
 		2B28AD7F1D624D7900F36628 /* LoggedInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggedInViewController.swift; sourceTree = "<group>"; };
 		2B28AD871D63706D00F36628 /* UpdateProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UpdateProfileTableViewController.swift; path = ../UpdateProfileTableViewController.swift; sourceTree = "<group>"; };
 		2B2AA40D1D6643CE00496166 /* CalendarHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarHeaderView.swift; sourceTree = "<group>"; };
+		2B5BA1951D6B9067006FEDDB /* DiveAppDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DiveAppDataModel.xcdatamodel; sourceTree = "<group>"; };
+		2B5BA1971D6BC03E006FEDDB /* dateObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = dateObject.swift; sourceTree = "<group>"; };
 		2BA6AF731D674AB10057D835 /* UpcomingClassesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpcomingClassesViewController.swift; sourceTree = "<group>"; };
 		2BA6AF771D6B49A50057D835 /* AnimationClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimationClass.swift; sourceTree = "<group>"; };
 		2BA6AF7C1D6B867C0057D835 /* ClassModuleCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassModuleCell.swift; sourceTree = "<group>"; };
-		2BA6AF7E1D6B8C550057D835 /* SelectedClassesTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectedClassesTableView.swift; sourceTree = "<group>"; };
 		568ADB3885B1676EF6393AD4 /* Pods-DiveApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DiveApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-DiveApp/Pods-DiveApp.release.xcconfig"; sourceTree = "<group>"; };
 		8EFB43B6DAA4030203D8C7B8 /* Pods-DiveAppUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DiveAppUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DiveAppUITests/Pods-DiveAppUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		BC46225F270FA14AFE6B3A0E /* Pods_DiveAppUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DiveAppUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -192,7 +194,6 @@
 				2B15A8601D66153200B857DE /* cellView.xib */,
 				2B15A8671D66162F00B857DE /* CellView.swift */,
 				2BA6AF771D6B49A50057D835 /* AnimationClass.swift */,
-				2BA6AF7E1D6B8C550057D835 /* SelectedClassesTableView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -209,6 +210,8 @@
 		2BA6AF7B1D6B6E4B0057D835 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				2B5BA1941D6B9067006FEDDB /* DiveAppDataModel.xcdatamodeld */,
+				2B5BA1971D6BC03E006FEDDB /* dateObject.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -511,12 +514,13 @@
 				2B28AD781D62183300F36628 /* LoginViewController.swift in Sources */,
 				2B15A8681D66162F00B857DE /* CellView.swift in Sources */,
 				2BA6AF741D674AB10057D835 /* UpcomingClassesViewController.swift in Sources */,
+				2B5BA1981D6BC03E006FEDDB /* dateObject.swift in Sources */,
 				2B2AA40E1D6643CE00496166 /* CalendarHeaderView.swift in Sources */,
 				2B28AD801D624D7900F36628 /* LoggedInViewController.swift in Sources */,
 				2B28AD4B1D62167600F36628 /* RegisterViewController.swift in Sources */,
 				2BA6AF781D6B49A50057D835 /* AnimationClass.swift in Sources */,
 				2B28AD491D62167600F36628 /* AppDelegate.swift in Sources */,
-				2BA6AF7F1D6B8C550057D835 /* SelectedClassesTableView.swift in Sources */,
+				2B5BA1961D6B9067006FEDDB /* DiveAppDataModel.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -772,6 +776,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		2B5BA1941D6B9067006FEDDB /* DiveAppDataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				2B5BA1951D6B9067006FEDDB /* DiveAppDataModel.xcdatamodel */,
+			);
+			currentVersion = 2B5BA1951D6B9067006FEDDB /* DiveAppDataModel.xcdatamodel */;
+			path = DiveAppDataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 2B28AD3D1D62167600F36628 /* Project object */;
 }

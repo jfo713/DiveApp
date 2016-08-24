@@ -8,13 +8,26 @@
 
 import UIKit
 import JTAppleCalendar
+import CloudKit
+
 
 class CellView: JTAppleDayCellView {
-
+    
     @IBOutlet weak var dayLabel :UILabel!
     @IBOutlet weak var selectedView :AnimationView!
     @IBInspectable var normalDayColor  :UIColor!
-    @IBInspectable var weekendDayColor :UIColor!
+    
+    var container :CKContainer!
+    var publicDB :CKDatabase!
+    var privateDB :CKDatabase!
+    
+    var krDates :[NSDate] = [NSDate]()
+    var cwDates :[NSDate] = [NSDate]()
+    var owDates :[NSDate] = [NSDate]()
+    
+    let krColor = UIColor.yellowColor()
+    let cwColor = UIColor.greenColor()
+    let owColor = UIColor.blueColor()
     
     let textSelectedColor = UIColor(hue: 0.425, saturation: 0.55, brightness: 0.34, alpha: 1.0)
     let textDeselectedColor = UIColor(hue: 0.4417, saturation: 0.15, brightness: 1, alpha: 1.0)
@@ -33,7 +46,15 @@ class CellView: JTAppleDayCellView {
     
     func setupCellBeforeDisplay(cellState: CellState, date: NSDate) {
         
+        self.container = CKContainer.defaultContainer()
+        self.publicDB = container.publicCloudDatabase
+        self.privateDB = container.privateCloudDatabase
+        
+        populateClasses(cellState)
+        
+        
         dayLabel.text = cellState.text
+        
         configureTextColor(cellState)
         
         delayRunOnMainThread(0.0) {
@@ -44,6 +65,85 @@ class CellView: JTAppleDayCellView {
         
     }
     
+    
+    func populateClasses(cellState: CellState) {
+        
+        let predicate = NSPredicate(value: true)
+        let query = CKQuery(recordType: "Classes", predicate: predicate)
+        publicDB.performQuery(query, inZoneWithID: nil) { (records :[CKRecord]?, error :NSError?) in
+            
+            for record in records! {
+                
+                if record.objectForKey("Module") as? String == "kr" {
+                    
+                    let krDate :NSDate = (record.objectForKey("Date") as? NSDate)!
+                    self.krDates.append(krDate)
+                    
+                }
+                
+                if record.objectForKey("Module") as? String == "cw" {
+                    
+                    let cwDate :NSDate = (record.objectForKey("Date") as? NSDate)!
+                    self.cwDates.append(cwDate)
+                
+                }
+                
+                if record.objectForKey("Module") as? String == "ow" {
+                    
+                    let owDate :NSDate = (record.objectForKey("Date") as? NSDate)!
+                    self.owDates.append(owDate)
+                    
+                }
+                
+            }
+        
+            self.configureBackgroundColor(cellState)
+            
+        }
+        
+    }
+    
+    func configureBackgroundColor(cellState: CellState) {
+
+        let cellDateString = c.stringFromDate(cellState.date)
+        
+        for date in krDates {
+            
+                let krDateString = c.stringFromDate(date)
+            
+            if krDateString == cellDateString {
+                
+                self.backgroundColor = krColor
+                
+                }
+            
+            }
+        
+        for date in cwDates {
+            
+            let cwDateString = c.stringFromDate(date)
+            
+            if cwDateString == cellDateString {
+                
+                self.backgroundColor = cwColor
+                
+            }
+        }
+        
+        for date in owDates {
+            
+            let owDateString = c.stringFromDate(date)
+            
+            if owDateString == cellDateString {
+                
+                self.backgroundColor = owColor
+            }
+            
+        }
+        
+    }
+
+
     func configureTextColor(cellState: CellState) {
         
         if cellState.dateBelongsTo == .ThisMonth {
@@ -51,10 +151,9 @@ class CellView: JTAppleDayCellView {
             dayLabel.textColor = UIColor.whiteColor()
         }
         
-        else {
+        else if cellState.dateBelongsTo == .PreviousMonthWithinBoundary || cellState.dateBelongsTo == .FollowingMonthWithinBoundary {
             
-            dayLabel.textColor = weekendDayColor
-            
+            dayLabel.textColor = UIColor.grayColor()
         }
         
     }
