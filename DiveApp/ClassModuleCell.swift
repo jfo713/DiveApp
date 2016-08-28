@@ -14,3 +14,4 @@ class ClassModuleCell: UITableViewCell {
     @IBOutlet weak var moduleTypeView :UIView!
 
 }
+

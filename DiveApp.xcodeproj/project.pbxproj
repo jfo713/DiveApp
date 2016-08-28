@@ -18,12 +18,13 @@
 		2B28AD691D62167600F36628 /* DiveAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B28AD681D62167600F36628 /* DiveAppUITests.swift */; };
 		2B28AD781D62183300F36628 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B28AD761D62183300F36628 /* LoginViewController.swift */; };
 		2B28AD7C1D62187A00F36628 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B28AD7B1D62187A00F36628 /* CloudKit.framework */; };
-		2B28AD7E1D62434200F36628 /* Diver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B28AD7D1D62434200F36628 /* Diver.swift */; };
 		2B28AD801D624D7900F36628 /* LoggedInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B28AD7F1D624D7900F36628 /* LoggedInViewController.swift */; };
 		2B28AD881D63706D00F36628 /* UpdateProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B28AD871D63706D00F36628 /* UpdateProfileTableViewController.swift */; };
-		2B2AA40E1D6643CE00496166 /* CalendarHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2AA40D1D6643CE00496166 /* CalendarHeaderView.swift */; };
 		2B5BA1961D6B9067006FEDDB /* DiveAppDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2B5BA1941D6B9067006FEDDB /* DiveAppDataModel.xcdatamodeld */; };
 		2B5BA1981D6BC03E006FEDDB /* dateObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5BA1971D6BC03E006FEDDB /* dateObject.swift */; };
+		2B6AE4CA1D6F4BEB00203160 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6AE4C91D6F4BEB00203160 /* HomeViewController.swift */; };
+		2B6AE4CD1D6F519C00203160 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6AE4CC1D6F519C00203160 /* SignInView.swift */; };
+		2B6AE4CF1D6F864400203160 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6AE4CE1D6F864400203160 /* RegisterView.swift */; };
 		2BA6AF741D674AB10057D835 /* UpcomingClassesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA6AF731D674AB10057D835 /* UpcomingClassesViewController.swift */; };
 		2BA6AF781D6B49A50057D835 /* AnimationClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA6AF771D6B49A50057D835 /* AnimationClass.swift */; };
 		2BA6AF7D1D6B867C0057D835 /* ClassModuleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA6AF7C1D6B867C0057D835 /* ClassModuleCell.swift */; };
@@ -70,12 +71,13 @@
 		2B28AD761D62183300F36628 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		2B28AD7A1D62186E00F36628 /* DiveApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = DiveApp.entitlements; sourceTree = "<group>"; };
 		2B28AD7B1D62187A00F36628 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
-		2B28AD7D1D62434200F36628 /* Diver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Diver.swift; sourceTree = "<group>"; };
 		2B28AD7F1D624D7900F36628 /* LoggedInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggedInViewController.swift; sourceTree = "<group>"; };
 		2B28AD871D63706D00F36628 /* UpdateProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UpdateProfileTableViewController.swift; path = ../UpdateProfileTableViewController.swift; sourceTree = "<group>"; };
-		2B2AA40D1D6643CE00496166 /* CalendarHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarHeaderView.swift; sourceTree = "<group>"; };
 		2B5BA1951D6B9067006FEDDB /* DiveAppDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DiveAppDataModel.xcdatamodel; sourceTree = "<group>"; };
 		2B5BA1971D6BC03E006FEDDB /* dateObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = dateObject.swift; sourceTree = "<group>"; };
+		2B6AE4C91D6F4BEB00203160 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		2B6AE4CC1D6F519C00203160 /* SignInView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
+		2B6AE4CE1D6F864400203160 /* RegisterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
 		2BA6AF731D674AB10057D835 /* UpcomingClassesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpcomingClassesViewController.swift; sourceTree = "<group>"; };
 		2BA6AF771D6B49A50057D835 /* AnimationClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimationClass.swift; sourceTree = "<group>"; };
 		2BA6AF7C1D6B867C0057D835 /* ClassModuleCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassModuleCell.swift; sourceTree = "<group>"; };
@@ -117,14 +119,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2B15A8621D66153D00B857DE /* CalendarView */ = {
+		2B15A8621D66153D00B857DE /* UpcomingClasses */ = {
 			isa = PBXGroup;
 			children = (
 				2BA6AF791D6B6E2A0057D835 /* Views */,
 				2BA6AF7B1D6B6E4B0057D835 /* Model */,
 				2BA6AF7A1D6B6E3F0057D835 /* Controllers */,
 			);
-			name = CalendarView;
+			name = UpcomingClasses;
 			sourceTree = "<group>";
 		};
 		2B28AD3C1D62167600F36628 = {
@@ -156,15 +158,12 @@
 				2B28AD7A1D62186E00F36628 /* DiveApp.entitlements */,
 				2B28AD4C1D62167600F36628 /* Main.storyboard */,
 				2B28AD481D62167600F36628 /* AppDelegate.swift */,
-				2B28AD4A1D62167600F36628 /* RegisterViewController.swift */,
-				2B28AD761D62183300F36628 /* LoginViewController.swift */,
-				2B28AD7F1D624D7900F36628 /* LoggedInViewController.swift */,
-				2B28AD871D63706D00F36628 /* UpdateProfileTableViewController.swift */,
-				2B28AD7D1D62434200F36628 /* Diver.swift */,
+				2B6AE4C91D6F4BEB00203160 /* HomeViewController.swift */,
+				2B15A8621D66153D00B857DE /* UpcomingClasses */,
+				2B6AE4CB1D6F4C3D00203160 /* UserProfileControllers */,
 				2B28AD4F1D62167600F36628 /* Assets.xcassets */,
 				2B28AD511D62167600F36628 /* LaunchScreen.storyboard */,
 				2B28AD541D62167600F36628 /* Info.plist */,
-				2B15A8621D66153D00B857DE /* CalendarView */,
 			);
 			path = DiveApp;
 			sourceTree = "<group>";
@@ -187,13 +186,25 @@
 			path = DiveAppUITests;
 			sourceTree = "<group>";
 		};
+		2B6AE4CB1D6F4C3D00203160 /* UserProfileControllers */ = {
+			isa = PBXGroup;
+			children = (
+				2B28AD4A1D62167600F36628 /* RegisterViewController.swift */,
+				2B28AD761D62183300F36628 /* LoginViewController.swift */,
+				2B28AD7F1D624D7900F36628 /* LoggedInViewController.swift */,
+				2B28AD871D63706D00F36628 /* UpdateProfileTableViewController.swift */,
+			);
+			name = UserProfileControllers;
+			sourceTree = "<group>";
+		};
 		2BA6AF791D6B6E2A0057D835 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				2B2AA40D1D6643CE00496166 /* CalendarHeaderView.swift */,
 				2B15A8601D66153200B857DE /* cellView.xib */,
 				2B15A8671D66162F00B857DE /* CellView.swift */,
 				2BA6AF771D6B49A50057D835 /* AnimationClass.swift */,
+				2B6AE4CC1D6F519C00203160 /* SignInView.swift */,
+				2B6AE4CE1D6F864400203160 /* RegisterView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -508,19 +519,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2B28AD7E1D62434200F36628 /* Diver.swift in Sources */,
 				2BA6AF7D1D6B867C0057D835 /* ClassModuleCell.swift in Sources */,
 				2B28AD881D63706D00F36628 /* UpdateProfileTableViewController.swift in Sources */,
 				2B28AD781D62183300F36628 /* LoginViewController.swift in Sources */,
+				2B6AE4CF1D6F864400203160 /* RegisterView.swift in Sources */,
 				2B15A8681D66162F00B857DE /* CellView.swift in Sources */,
 				2BA6AF741D674AB10057D835 /* UpcomingClassesViewController.swift in Sources */,
 				2B5BA1981D6BC03E006FEDDB /* dateObject.swift in Sources */,
-				2B2AA40E1D6643CE00496166 /* CalendarHeaderView.swift in Sources */,
 				2B28AD801D624D7900F36628 /* LoggedInViewController.swift in Sources */,
 				2B28AD4B1D62167600F36628 /* RegisterViewController.swift in Sources */,
 				2BA6AF781D6B49A50057D835 /* AnimationClass.swift in Sources */,
 				2B28AD491D62167600F36628 /* AppDelegate.swift in Sources */,
+				2B6AE4CA1D6F4BEB00203160 /* HomeViewController.swift in Sources */,
 				2B5BA1961D6B9067006FEDDB /* DiveAppDataModel.xcdatamodeld in Sources */,
+				2B6AE4CD1D6F519C00203160 /* SignInView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

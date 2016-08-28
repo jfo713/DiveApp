@@ -21,7 +21,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         setupCoreData()
         
-        guard let upcomingClassesViewController = self.window?.rootViewController as? UpcomingClassesViewController else {fatalError("Invalid Root View Controller")}
+        guard let navigationViewController = self.window?.rootViewController as? UINavigationController else {fatalError("Invalid Root View Controller")}
+        
+        guard let upcomingClassesViewController = navigationViewController.viewControllers.first as? UpcomingClassesViewController else {fatalError("CategoryList Table Not Found")}
+        
         
         upcomingClassesViewController.managedObjectContext = self.managedObjectContext
         
