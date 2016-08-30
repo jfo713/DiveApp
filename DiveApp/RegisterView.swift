@@ -10,7 +10,7 @@ import UIKit
 
 protocol RegisterViewDelegate : class {
     
-    func registerViewDidRegister(username :String, password :String, confirmPassword :String)
+    func registerViewDidRegister(username :String!, password :String!, confirmPassword :String!)
     
 }
 
@@ -22,9 +22,23 @@ class RegisterView: UIView {
     @IBOutlet weak var passwordTextField :UITextField!
     @IBOutlet weak var confirmPasswordTextField :UITextField!
     
-    @IBAction func register() {
+    @IBAction func registerButtonPressed() {
         
-        self.delegate.registerViewDidRegister(usernameTextField.text!, password: passwordTextField.text!, confirmPassword: confirmPasswordTextField.text!)
+        if (self.usernameTextField.text!.isEmpty || self.passwordTextField.text!.isEmpty || self.confirmPasswordTextField.text!.isEmpty) {
+            
+            self.usernameTextField.text = ""
+            self.passwordTextField.text = ""
+            self.confirmPasswordTextField.text = ""
+            
+            self.delegate.registerViewDidRegister(usernameTextField.text!, password: passwordTextField.text!, confirmPassword: confirmPasswordTextField.text!)
+            
+        }
+        
+        else {
+        
+            self.delegate.registerViewDidRegister(usernameTextField.text!, password: passwordTextField.text!, confirmPassword: confirmPasswordTextField.text!)
+            
+        }
         
     }
     

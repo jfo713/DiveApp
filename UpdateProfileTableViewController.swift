@@ -192,6 +192,7 @@ class UpdateProfileTableViewController: UITableViewController, UIImagePickerCont
                 
             }
         
+            self.performSegueWithIdentifier("ReturnToCalendarSegue", sender: self)
         }
         
     }

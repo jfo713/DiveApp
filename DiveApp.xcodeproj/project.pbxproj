@@ -22,6 +22,7 @@
 		2B28AD881D63706D00F36628 /* UpdateProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B28AD871D63706D00F36628 /* UpdateProfileTableViewController.swift */; };
 		2B5BA1961D6B9067006FEDDB /* DiveAppDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2B5BA1941D6B9067006FEDDB /* DiveAppDataModel.xcdatamodeld */; };
 		2B5BA1981D6BC03E006FEDDB /* dateObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5BA1971D6BC03E006FEDDB /* dateObject.swift */; };
+		2B5EDF701D74B9DD00EC8CDE /* AppointmentObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5EDF6F1D74B9DD00EC8CDE /* AppointmentObject.swift */; };
 		2B6AE4CA1D6F4BEB00203160 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6AE4C91D6F4BEB00203160 /* HomeViewController.swift */; };
 		2B6AE4CD1D6F519C00203160 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6AE4CC1D6F519C00203160 /* SignInView.swift */; };
 		2B6AE4CF1D6F864400203160 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6AE4CE1D6F864400203160 /* RegisterView.swift */; };
@@ -75,6 +76,7 @@
 		2B28AD871D63706D00F36628 /* UpdateProfileTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UpdateProfileTableViewController.swift; path = ../UpdateProfileTableViewController.swift; sourceTree = "<group>"; };
 		2B5BA1951D6B9067006FEDDB /* DiveAppDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DiveAppDataModel.xcdatamodel; sourceTree = "<group>"; };
 		2B5BA1971D6BC03E006FEDDB /* dateObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = dateObject.swift; sourceTree = "<group>"; };
+		2B5EDF6F1D74B9DD00EC8CDE /* AppointmentObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppointmentObject.swift; sourceTree = "<group>"; };
 		2B6AE4C91D6F4BEB00203160 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		2B6AE4CC1D6F519C00203160 /* SignInView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		2B6AE4CE1D6F864400203160 /* RegisterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
@@ -223,6 +225,7 @@
 			children = (
 				2B5BA1941D6B9067006FEDDB /* DiveAppDataModel.xcdatamodeld */,
 				2B5BA1971D6BC03E006FEDDB /* dateObject.swift */,
+				2B5EDF6F1D74B9DD00EC8CDE /* AppointmentObject.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -525,6 +528,7 @@
 				2B6AE4CF1D6F864400203160 /* RegisterView.swift in Sources */,
 				2B15A8681D66162F00B857DE /* CellView.swift in Sources */,
 				2BA6AF741D674AB10057D835 /* UpcomingClassesViewController.swift in Sources */,
+				2B5EDF701D74B9DD00EC8CDE /* AppointmentObject.swift in Sources */,
 				2B5BA1981D6BC03E006FEDDB /* dateObject.swift in Sources */,
 				2B28AD801D624D7900F36628 /* LoggedInViewController.swift in Sources */,
 				2B28AD4B1D62167600F36628 /* RegisterViewController.swift in Sources */,

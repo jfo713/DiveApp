@@ -95,8 +95,6 @@ class RegisterViewController: UIViewController {
             
         }
         
-       // displayAlertMessage("Registration Successful - Thank You!")
-        
     }
     
     func displayAlertMessage(userMessage :String) {

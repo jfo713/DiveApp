@@ -56,6 +56,9 @@ public struct CellState {
     public let selectedPosition: ()->SelectionRangePosition
     /// returns the cell frame. Useful if you wish to display something at the cell's frame/position
     public var cell: ()->JTAppleDayCell?
+    
+    
+    
 }
 
 /// Selection position of a range-selected date cell
@@ -825,7 +828,12 @@ extension JTAppleCalendarView {
             column: { return itemIndex % MAX_NUMBER_OF_DAYS_IN_WEEK },
             dateSection: { return self.dateFromSection(itemSection)! },
             selectedPosition: rangePosition,
+            
             cell: {return cell}
+            
+            
+            
+            
         )
         return cellState
     }

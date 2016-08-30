@@ -8,16 +8,9 @@
 
 import UIKit
 import JTAppleCalendar
-import CoreData
 import CloudKit
 
-protocol BookDateDelegate :class {
-    
-    func bookDatesCoreData(addDates: [NSDate])
-    
-}
-
-class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, BookDateDelegate, SignInViewDelegate {
+class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SignInViewDelegate, RegisterViewDelegate {
     
     @IBOutlet weak var calendarView :JTAppleCalendarView!
     @IBOutlet weak var monthLabel :UILabel!
@@ -26,7 +19,7 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
     @IBOutlet weak var saveButtonView :UIButton!
     @IBOutlet weak var clearButtonView :UIButton!
     
-    @IBOutlet weak var selectedClassesTableView :UITableView!
+    @IBOutlet weak var selectedAppointmentsTableView :UITableView!
     
     let cellReuseIdentifier = "CellView"
     
@@ -34,18 +27,16 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
     var publicDB :CKDatabase!
     var privateDB :CKDatabase!
     
-    
-    
-    var managedObjectContext :NSManagedObjectContext!
-    var fetchedResultsController :NSFetchedResultsController!
-    var dateObject :DateObject!
-    
     let formatter = NSDateFormatter()
     
     let calendar :NSCalendar! = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
     
     var selectedDate = NSDate()
-    var selectedDates = [NSDate]()
+    var selectedDateModule :String?
+    var selectedDateStringArray = [NSDate]()
+    
+    var requestedAppointments = [AppointmentObject]()
+    
     
     var krDates = [NSDate]()
     var cwDates = [NSDate]()
@@ -74,9 +65,10 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
         calendarView.registerCellViewXib(fileName: "cellView")
        
         self.signInView.delegate = self
+        self.registerView.delegate = self
         
-        selectedClassesTableView.delegate = self
-        selectedClassesTableView.dataSource = self
+        selectedAppointmentsTableView.delegate = self
+        selectedAppointmentsTableView.dataSource = self
         
         self.calendarView.cellInset = CGPoint(x: 1, y: 1)
         calendarView.scrollToDate(NSDate(), triggerScrollToDateDelegate: false, animateScroll: false) {
@@ -85,15 +77,64 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
         
             self.setupViewsOfCalendar(currentDate.dateRange.start, endDate: currentDate.dateRange.end)
         }
+                
+    }
+    
+//MARK: IBAction
+    
+    @IBAction func changeToRegisterView() {
         
-        let fetchRequest = NSFetchRequest(entityName: "ClassDate")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+        print("Register Button Pressed")
         
-        self.fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+        animateViewOutLeft(signInView)
+        self.view.addSubview(registerView)
+        animateViewToCenter(registerView)
         
-        self.fetchedResultsController.delegate = self
+    }
+    
+    @IBAction func alreadyRegistered() {
         
-        try! self.fetchedResultsController.performFetch()
+        animateViewOutRight(registerView)
+        animateViewToCenter(signInView)
+        
+    }
+    
+    
+    @IBAction func saveButton() {
+        
+        let logInStatus :Bool = NSUserDefaults.standardUserDefaults().boolForKey("isUserLoggedIn")
+        
+        if logInStatus == false {
+            
+            self.view.addSubview(self.signInView)
+           
+           // bookAppointmentsUserDefaults(requestedAppointments)
+            
+            fadeView(calendarView)
+            fadeView(selectedAppointmentsTableView)
+            fadeView(monthLabel)
+            fadeView(saveButtonView)
+            fadeView(clearButtonView)
+            
+            animateViewToCenter(signInView)
+            
+        }
+            
+        else if logInStatus == true {
+            
+            bookDatesCloudKit(requestedAppointments)
+            
+            self.displayAlertMessage("Enrollment Successful!")
+            
+        }
+    }
+    
+    @IBAction func clearButton() {
+        
+        requestedAppointments.removeAll()
+        selectedAppointmentsTableView.reloadData()
+        NSUserDefaults.standardUserDefaults().setObject("", forKey: "cacheDateArray")
+        NSUserDefaults.standardUserDefaults().setBool(false, forKey: "isUserLoggedIn")
         
     }
 
@@ -171,81 +212,249 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     
-//MARK: IBAction
+//MARK: SaveBookingFunctions
     
-    @IBAction func changeToRegisterView() {
-        
-        print("Register Button Pressed")
-        
-        animateViewOutLeft(signInView)
-        self.view.addSubview(registerView)
-        animateViewToCenter(registerView)
-        
-    }
+//    func bookAppointmentsUserDefaults(appointmentArray :[AppointmentObject]) {
+//        
+//        NSUserDefaults.standardUserDefaults().setObject(appointmentArray, forKey: "cacheDateArray")
+//        
+//    }
     
-    @IBAction func alreadyRegistered() {
+    func bookDatesCloudKit(appointmentArray :[AppointmentObject]) {
         
-        animateViewOutRight(registerView)
-        animateViewToCenter(signInView)
-        
-    }
-    
-    @IBAction func saveButton() {
-        
-        let logInStatus :Bool = NSUserDefaults.standardUserDefaults().boolForKey("isUserLoggedIn")
-        
-        if logInStatus == false {
+        let userName :String = (NSUserDefaults.standardUserDefaults().valueForKey("currentUserName") as? String)!
+        let diverPredicate = NSPredicate(format: "userName == %@", userName)
+        let diverQuery = CKQuery(recordType: "Divers", predicate: diverPredicate)
+        publicDB.performQuery(diverQuery, inZoneWithID: nil) { (records: [CKRecord]?, error: NSError?) in
             
-            
-            self.view.addSubview(self.signInView)
-            //self.signInView.delegate = self
-           
-            fadeView(calendarView)
-            fadeView(selectedClassesTableView)
-            fadeView(monthLabel)
-            fadeView(saveButtonView)
-            fadeView(clearButtonView)
-            
-            animateViewToCenter(signInView)
-            
-        
-            
-        }
-            
-        else if logInStatus == true {
-            
-            bookDatesCoreData(selectedDates)
-            
-            guard let testDates = self.fetchedResultsController.fetchedObjects else {
-                fatalError("Error Fetching Results")
+            guard let diverRecord = records?.first else {
+                fatalError("Username not found")
             }
             
-            print(testDates.count)
+            
+            
+            let action = CKReferenceAction(rawValue: 1)
+            let diverReference = CKReference(record: diverRecord, action: action!)
+            
+            let studentRecord = CKRecord(recordType: "UserClasses")
+            studentRecord.setObject(diverReference, forKey: "Student")
+            
+            for appointment in appointmentArray {
+                
+//                let startDate = self.calendar.dateBySettingHour(0, minute: 0, second: 0, ofDate: appointment.appointmentDate!, options: .MatchNextTime)
+//                let endDate = self.calendar.dateBySettingHour(19, minute: 0, second: 0, ofDate: appointment.appointmentDate!, options: .MatchNextTime)
+                
+                let classPredicate = NSPredicate(format: "Module = %@ AND DateString = %@", appointment.moduleType!, appointment.appointmentDateString!)
+                    
+                
+                let classQuery = CKQuery(recordType: "Classes", predicate: classPredicate)
+                self.publicDB.performQuery(classQuery, inZoneWithID: nil) { (classRecords: [CKRecord]?, error: NSError?) in
+                    
+                    for classRecord in classRecords! {
+                        
+                        print(classRecord["Module"])
+                        
+                        if (classRecord["Module"] as! String == "kr") {
+                        
+                            let krReference = CKReference(record: classRecord, action: action!)
+                            studentRecord.setObject(krReference, forKey: "krClass")
+                            
+                        }
+                        
+                        if (classRecord["Module"] as! String == "cw") {
+                            
+                            let cwReference = CKReference(record: classRecord, action: action!)
+                            
+                            if (studentRecord["cwClass1"] == nil) {
+                                
+                                studentRecord.setObject(cwReference, forKey: "cwClass1")
+                                print("cwClass1")
+                            }
+                            
+                          else  {
+                                
+                                studentRecord.setObject(cwReference, forKey: "cwClass2")
+                                print("cwClass2")
+                            }
+                        }
+                        
+                        if (classRecord["Module"] as! String == "ow") {
+                            
+                            let owReference = CKReference(record: classRecord, action: action!)
+                            
+                            if (studentRecord["owClass1"] == nil) {
+                                
+                                studentRecord.setObject(owReference, forKey: "owClass1")
+                                print("owClass1")
+                                
+                            }
+                            
+                            else {
+                                
+                                studentRecord.setObject(owReference, forKey: "owClass2")
+                                print("owClass2")
+                                
+                            }
+                        }
+                    
+                    
+                    self.publicDB.saveRecord(studentRecord) { (record :CKRecord?, error :NSError?) in
+                        
+                        print("save record fired")
+                        //self.displayAlertMessage("Enrollment Successful!")
+                        
+                    }
+                    }
+               
+                }
+                
+            }
+        }
+    }
+
+//MARK: SignInFunctions
+    
+    func signInViewDidSignIn(userName: String!, password: String!) {
+        
+        if (userName.isEmpty || password.isEmpty) {
+            
+            displayAlertMessage("All Fields Are Required")
+            return;
+            
+        }
+        
+        checkLogIn(userName, passwordString: password)
+        
+    }
+    
+    func checkLogIn(userNameString :String, passwordString :String) {
+        
+        let predicate = NSPredicate(format: "userName = %@ AND password = %@", userNameString, passwordString)
+        let query = CKQuery(recordType: "Divers", predicate: predicate)
+        publicDB.performQuery(query, inZoneWithID: nil) { (records: [CKRecord]?, error: NSError?) in
+            
+            if (records!.count == 0) {
+                
+                self.displayAlertMessage("Diver Record Not Found")
+                return;
+                
+            }
+                
+            else {
+                
+                for record in records! {
+                    
+                    let userName = record["userName"] as! String
+                    print(userName)
+                    NSUserDefaults.standardUserDefaults().setObject(userName, forKey: "currentUserName")
+                    NSUserDefaults.standardUserDefaults().setBool(true, forKey: "isUserLoggedIn")
+                    
+                }
+                
+                dispatch_async(dispatch_get_main_queue()) {
+                    
+                    self.signInView.hidden = true
+                    self.unfadeView(self.calendarView)
+                    self.unfadeView(self.selectedAppointmentsTableView)
+                    self.unfadeView(self.saveButtonView)
+                    self.unfadeView(self.clearButtonView)
+                    self.unfadeView(self.monthLabel)
+                    
+                }
+            }
+        }
+    }
+    
+//MARK: RegisterFunctions
+    
+    func registerViewDidRegister(username: String!, password: String!, confirmPassword: String!) {
+        
+        if (username.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+            
+            displayAlertMessage("All Fields Are Required")
+            return;
+            
+        }
+        
+        if (password != confirmPassword) {
+            
+            displayAlertMessage("Passwords Do Not Match")
+            return;
+            
+        }
+        
+        doesUserExist(username, desiredPassword: password) {(userExists :Bool) in
+            
+            if userExists == true {
+                
+                self.displayAlertMessage("Username Already Exists")
+                return;
+                
+            }
+            
+            else if userExists == false {
+                
+                self.addDiverRecord(username, newDiverPassword: password)
+                
+                dispatch_async(dispatch_get_main_queue()) {
+                    
+                    self.registerView.hidden = true
+                    self.animateViewToCenter(self.signInView)
+                    self.unfadeView(self.calendarView)
+                    self.unfadeView(self.selectedAppointmentsTableView)
+                    self.unfadeView(self.saveButtonView)
+                    self.unfadeView(self.clearButtonView)
+                    self.unfadeView(self.monthLabel)
+                    
+                }
+                
+            }
+        }
+    }
+    
+    func doesUserExist(desiredUserName :String, desiredPassword :String, completion: (userExists :Bool) -> Void) {
+        
+        var userExistStatus = Bool()
+        let predicate = NSPredicate(format: "userName == %@", desiredUserName)
+        let query = CKQuery(recordType: "Divers", predicate: predicate)
+        publicDB.performQuery(query, inZoneWithID: nil) { results, error in
+            
+            if results!.count == 0 {
+                
+                userExistStatus = false
+                
+                completion(userExists: userExistStatus)
+
+                //self.addDiverRecord(desiredUserName, newDiverPassword: desiredPassword)
+                
+            }
+                
+            else if results!.count > 0 {
+                
+                userExistStatus = true
+                
+                completion(userExists: userExistStatus)
+                
+                self.displayAlertMessage("Username Already Registered")
+                
+            }
+        }
+    }
+    
+    func addDiverRecord(newDiverUserName :String, newDiverPassword :String) {
+        
+        let diverRecord = CKRecord(recordType: "Divers")
+        diverRecord["userName"] = newDiverUserName
+        diverRecord["password"] = newDiverPassword
+        self.publicDB.saveRecord(diverRecord) { (record :CKRecord?, error :NSError?) in
+            
+            print(record?.recordID)
+            self.displayAlertMessage("Registration Successful - Thank You! Please Log In.")
             
         }
     }
     
-    @IBAction func clearButton() {
-        
-        let fetchRequest = NSFetchRequest(entityName: "ClassDate")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
-        
-        let dateObjects = try! self.managedObjectContext.executeFetchRequest(fetchRequest) as? [DateObject]
-        
-        for dt in dateObjects! {
-            
-            self.managedObjectContext.deleteObject(dt)
-            try!  self.managedObjectContext.save()
-            
-        }
-        
-        selectedDates.removeAll()
-        selectedClassesTableView.reloadData()
-        NSUserDefaults.standardUserDefaults().setBool(false, forKey: "isUserLoggedIn")
-        
-    }
-
-//MARK: Animation Func
+//MARK: AnimationFunctions
     
     override func viewWillAppear(animated: Bool) {
         self.signInView.center.y -= super.view.frame.width
@@ -290,6 +499,18 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
         
     }
     
+    func animateViewOutTop(view :UIView) {
+        
+        UIView.animateWithDuration(1.0, animations:{
+            
+            view.center.x = super.view.frame.width/2
+            view.center.y -= super.view.frame.width
+            
+        })
+        
+    }
+
+    
     func animateViewOutLeft(view :UIView) {
         
         UIView.animateWithDuration(1.0, animations:{
@@ -312,83 +533,9 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
         
     }
     
-    
-    
-    func signInViewDidSignIn(userName: String!, password: String!) {
-        
-        if (userName.isEmpty || password.isEmpty) {
-            
-            displayAlertMessage("All Fields Are Required")
-            return;
-            
-        }
-        
-        checkLogIn(userName, passwordString: password)
-
-    }
-    
-    func checkLogIn(userNameString :String, passwordString :String) {
-        
-        let predicate = NSPredicate(format: "userName = %@ AND password = %@", userNameString, passwordString)
-        let query = CKQuery(recordType: "Divers", predicate: predicate)
-        publicDB.performQuery(query, inZoneWithID: nil) { (records: [CKRecord]?, error: NSError?) in
-            
-            if (records!.count == 0) {
-                
-                self.displayAlertMessage("Diver Record Not Found")
-                return;
-                
-            }
-                
-            else {
-                
-                for record in records! {
-                    
-                    let userName = record["userName"] as! String
-                    print(userName)
-                    NSUserDefaults.standardUserDefaults().setObject(userName, forKey: "currentUserName")
-                    NSUserDefaults.standardUserDefaults().setBool(true, forKey: "isUserLoggedIn")
-                    
-                }
-                
-                dispatch_async(dispatch_get_main_queue()) {
-                    
-                    self.signInView.hidden = true
-                    self.unfadeView(self.calendarView)
-                    self.unfadeView(self.selectedClassesTableView)
-                    self.unfadeView(self.saveButtonView)
-                    self.unfadeView(self.clearButtonView)
-                    self.unfadeView(self.monthLabel)
-                    
-                }
-            }
-        }
-    }
-    
-    func bookDatesCoreData(addDates :[NSDate]) {
-        
-                for date in addDates {
-            
-            guard let newDate = NSEntityDescription.insertNewObjectForEntityForName("ClassDate", inManagedObjectContext: self.managedObjectContext) as? DateObject else {fatalError("dateObject failed to insert")}
-
-            newDate.date = date
-        
-        try! self.managedObjectContext.save()
-        
-        }
-        
-    }
-    
-    override func didReceiveMemoryWarning() {
-            super.didReceiveMemoryWarning()
-            
-        }
-    
 }
 
 extension UpcomingClassesViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDelegate {
-    
-    
     
     func configureCalendar(calendar: JTAppleCalendarView) -> (startDate :NSDate, endDate :NSDate, numberOfRows :Int, calendar :NSCalendar) {
         
@@ -428,16 +575,19 @@ extension UpcomingClassesViewController: JTAppleCalendarViewDataSource, JTAppleC
             
             cell.backgroundColor = krColor
             
+            
         }
-        
+    
         else if cwDateStrings.contains(cellDateString) {
             
             cell.backgroundColor = cwColor
+            
         }
         
         else if owDateStrings.contains(cellDateString) {
             
             cell.backgroundColor = owColor
+            
             
         }
         
@@ -446,25 +596,53 @@ extension UpcomingClassesViewController: JTAppleCalendarViewDataSource, JTAppleC
             cell.backgroundColor = normalDayColor
             
         }
-                
         
     }
     
     func calendar(calendar: JTAppleCalendarView, didSelectDate date: NSDate, cell: JTAppleDayCellView?, cellState: CellState) {
         (cell as? CellView)?.cellSelectionChanged(cellState)
         
-        selectedDate = date
-        
-        selectedDates.append(selectedDate)
+        let appointment = AppointmentObject() 
+        appointment.appointmentDate = date
         
         formatter.dateFormat = "dd/MM/yyyy"
-        let stringDate = formatter.stringFromDate(selectedDate)
-        print(stringDate)
+        appointment.appointmentDateString = formatter.stringFromDate(date)
         
-       self.selectedClassesTableView.reloadData()
+        sortModuleType(appointment.appointmentDateString!)
+        appointment.moduleType = self.selectedDateModule
         
-        print(selectedDates.count)
+        requestedAppointments.append(appointment)
+        
+        self.selectedAppointmentsTableView.reloadData()
+        
+    }
     
+    func sortModuleType(stringDate :String) {
+        
+        if krDateStrings.contains(stringDate) {
+            
+            self.selectedDateModule = "kr"
+            
+        }
+        
+        else if cwDateStrings.contains(stringDate) {
+            
+            self.selectedDateModule = "cw"
+            
+        }
+        
+        else if owDateStrings.contains(stringDate) {
+            
+            self.selectedDateModule = "ow"
+            
+        }
+        
+        else {
+            
+            self.selectedDateModule = "noClass"
+            
+        }
+        
     }
     
     func calendar(calendar: JTAppleCalendarView, didDeselectDate date: NSDate, cell: JTAppleDayCellView?, cellState: CellState) {
@@ -496,14 +674,15 @@ extension UpcomingClassesViewController: JTAppleCalendarViewDataSource, JTAppleC
     func calendar(calendar: JTAppleCalendarView, isAboutToDisplaySectionHeader header: JTAppleHeaderView, date: (startDate: NSDate, endDate: NSDate), identifier: String) {
     }
     
-    
 }
+
+
 
 extension UpcomingClassesViewController {
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return selectedDates.count
+        return requestedAppointments.count
     }
     
     func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -513,10 +692,8 @@ extension UpcomingClassesViewController {
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("moduleCell", forIndexPath: indexPath) as! ClassModuleCell
         
-        let date = selectedDates[indexPath.row]
-        formatter.dateFormat = "dd/MM/yyyy"
-        let stringDate = formatter.stringFromDate(date)
-        cell.dateLabel.text = stringDate
+        let cellAppointment :AppointmentObject = requestedAppointments[indexPath.row]
+        cell.dateLabel.text = cellAppointment.appointmentDateString
         
         return cell
     }

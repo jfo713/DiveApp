@@ -21,6 +21,8 @@ class CellView: JTAppleDayCellView {
     let cwColor = UIColor.greenColor()
     let owColor = UIColor.blueColor()
     
+    var cellModuleType :String?
+    
     let textSelectedColor = UIColor(hue: 0.425, saturation: 0.55, brightness: 0.34, alpha: 1.0)
     let textDeselectedColor = UIColor(hue: 0.4417, saturation: 0.15, brightness: 1, alpha: 1.0)
     let previousMonthTextColor = UIColor(hue: 0.3694, saturation: 0.38, brightness: 0.57, alpha: 1.0)
@@ -38,11 +40,6 @@ class CellView: JTAppleDayCellView {
     
     func setupCellBeforeDisplay(cellState: CellState, date: NSDate) {
         
-        
-        
-//        populateClasses(cellState)
-        
-        
         dayLabel.text = cellState.text
         
         configureTextColor(cellState)
@@ -52,6 +49,7 @@ class CellView: JTAppleDayCellView {
         }
         
         configureVisibility(cellState)
+        
         
     }
     
