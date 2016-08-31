@@ -11,7 +11,9 @@ import UIKit
 class AppointmentObject: NSObject {
     
     var appointmentDate :NSDate?
+    var title :String! 
     var moduleType :String?
     var appointmentDateString :String?
+    var appointmentColorCode :UIColor?
 
 }

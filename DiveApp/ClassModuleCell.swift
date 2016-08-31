@@ -12,6 +12,7 @@ class ClassModuleCell: UITableViewCell {
     
     @IBOutlet weak var dateLabel :UILabel!
     @IBOutlet weak var moduleTypeView :UIView!
+    @IBOutlet weak var colorCodeView :UIView!
 
 }
 

@@ -23,6 +23,8 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
     
     let cellReuseIdentifier = "CellView"
     
+    var myOpenWaterCourse :OpenWaterCourse?
+    
     var container :CKContainer!
     var publicDB :CKDatabase!
     var privateDB :CKDatabase!
@@ -57,6 +59,13 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
         self.container = CKContainer.defaultContainer()
         self.publicDB = container.publicCloudDatabase
         self.privateDB = container.privateCloudDatabase
+        
+        let appointmentObject1 = AppointmentObject()
+        appointmentObject1.title = "Pool Appointment"
+        
+        self.requestedAppointments.append(appointmentObject1)
+        
+        self.selectedAppointmentsTableView.reloadData()
         
         self.populateArrays()
         
@@ -222,6 +231,8 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
     
     func bookDatesCloudKit(appointmentArray :[AppointmentObject]) {
         
+        
+        
         let userName :String = (NSUserDefaults.standardUserDefaults().valueForKey("currentUserName") as? String)!
         let diverPredicate = NSPredicate(format: "userName == %@", userName)
         let diverQuery = CKQuery(recordType: "Divers", predicate: diverPredicate)
@@ -303,11 +314,9 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
                         print("save record fired")
                         //self.displayAlertMessage("Enrollment Successful!")
                         
+                        }
                     }
-                    }
-               
                 }
-                
             }
         }
     }
@@ -353,7 +362,9 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
                 
                 dispatch_async(dispatch_get_main_queue()) {
                     
-                    self.signInView.hidden = true
+                    self.animateViewOutTop(self.signInView)
+                    self.signInView.usernameTextField.text = ""
+                    self.signInView.passwordTextField.text = ""
                     self.unfadeView(self.calendarView)
                     self.unfadeView(self.selectedAppointmentsTableView)
                     self.unfadeView(self.saveButtonView)
@@ -503,8 +514,10 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
         
         UIView.animateWithDuration(1.0, animations:{
             
+            
+            
             view.center.x = super.view.frame.width/2
-            view.center.y -= super.view.frame.width
+            view.center.y -= super.view.frame.height
             
         })
         
@@ -611,6 +624,32 @@ extension UpcomingClassesViewController: JTAppleCalendarViewDataSource, JTAppleC
         sortModuleType(appointment.appointmentDateString!)
         appointment.moduleType = self.selectedDateModule
         
+        if (appointment.moduleType == "kr") {
+            
+            appointment.appointmentColorCode = self.krColor
+            myOpenWaterCourse?.krAppointment = appointment
+            
+        }
+        
+        else if (appointment.moduleType == "cw") {
+            
+            appointment.appointmentColorCode = self.cwColor
+            
+        }
+        
+        else if (appointment.moduleType == "ow") {
+            
+            appointment.appointmentColorCode = self.owColor
+            
+        }
+        
+        else if (appointment.moduleType == "noClass") {
+            
+            self.displayAlertMessage("There is no class scheduled for this date")
+            return;
+            
+        }
+        
         requestedAppointments.append(appointment)
         
         self.selectedAppointmentsTableView.reloadData()
@@ -694,6 +733,9 @@ extension UpcomingClassesViewController {
         
         let cellAppointment :AppointmentObject = requestedAppointments[indexPath.row]
         cell.dateLabel.text = cellAppointment.appointmentDateString
+        cell.textLabel?.text = cellAppointment.title
+        
+        cell.colorCodeView.backgroundColor = cellAppointment.appointmentColorCode
         
         return cell
     }
