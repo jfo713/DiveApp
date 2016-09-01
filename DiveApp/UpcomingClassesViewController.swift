@@ -23,7 +23,10 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
     
     let cellReuseIdentifier = "CellView"
     
-    var myOpenWaterCourse :OpenWaterCourse?
+    var cwReferenceArray :[CKReference] = [CKReference]()
+    var owReferenceArray :[CKReference] = [CKReference]()
+    
+    var myOpenWaterCourse = OpenWaterCourse()
     
     var container :CKContainer!
     var publicDB :CKDatabase!
@@ -63,7 +66,7 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
         let appointmentObject1 = AppointmentObject()
         appointmentObject1.title = "Pool Appointment"
         
-        self.requestedAppointments.append(appointmentObject1)
+        //self.requestedAppointments.append(appointmentObject1)
         
         self.selectedAppointmentsTableView.reloadData()
         
@@ -223,103 +226,87 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
     
 //MARK: SaveBookingFunctions
     
-//    func bookAppointmentsUserDefaults(appointmentArray :[AppointmentObject]) {
-//        
-//        NSUserDefaults.standardUserDefaults().setObject(appointmentArray, forKey: "cacheDateArray")
-//        
-//    }
+
     
     func bookDatesCloudKit(appointmentArray :[AppointmentObject]) {
-        
-        
         
         let userName :String = (NSUserDefaults.standardUserDefaults().valueForKey("currentUserName") as? String)!
         let diverPredicate = NSPredicate(format: "userName == %@", userName)
         let diverQuery = CKQuery(recordType: "Divers", predicate: diverPredicate)
         publicDB.performQuery(diverQuery, inZoneWithID: nil) { (records: [CKRecord]?, error: NSError?) in
-            
+
             guard let diverRecord = records?.first else {
                 fatalError("Username not found")
             }
             
-            
-            
             let action = CKReferenceAction(rawValue: 1)
             let diverReference = CKReference(record: diverRecord, action: action!)
-            
             let studentRecord = CKRecord(recordType: "UserClasses")
             studentRecord.setObject(diverReference, forKey: "Student")
-            
+
             for appointment in appointmentArray {
-                
-//                let startDate = self.calendar.dateBySettingHour(0, minute: 0, second: 0, ofDate: appointment.appointmentDate!, options: .MatchNextTime)
-//                let endDate = self.calendar.dateBySettingHour(19, minute: 0, second: 0, ofDate: appointment.appointmentDate!, options: .MatchNextTime)
-                
-                let classPredicate = NSPredicate(format: "Module = %@ AND DateString = %@", appointment.moduleType!, appointment.appointmentDateString!)
                     
-                
+                let classPredicate = NSPredicate(format: "Module = %@ AND DateString = %@", appointment.moduleType!, appointment.appointmentDateString!)
                 let classQuery = CKQuery(recordType: "Classes", predicate: classPredicate)
                 self.publicDB.performQuery(classQuery, inZoneWithID: nil) { (classRecords: [CKRecord]?, error: NSError?) in
-                    
-                    for classRecord in classRecords! {
                         
-                        print(classRecord["Module"])
+                var cwReference :CKReference!
+                var owReference :CKReference!
                         
-                        if (classRecord["Module"] as! String == "kr") {
-                        
-                            let krReference = CKReference(record: classRecord, action: action!)
-                            studentRecord.setObject(krReference, forKey: "krClass")
+                let saveAppointments = CKModifyRecordsOperation(recordsToSave: classRecords, recordIDsToDelete: nil)
+            
+                        for classRecord in classRecords! {
                             
-                        }
-                        
-                        if (classRecord["Module"] as! String == "cw") {
-                            
-                            let cwReference = CKReference(record: classRecord, action: action!)
-                            
-                            if (studentRecord["cwClass1"] == nil) {
-                                
-                                studentRecord.setObject(cwReference, forKey: "cwClass1")
-                                print("cwClass1")
+                            if (classRecord["Module"] as! String == "kr") {
+                                let krReference = CKReference(record: classRecord, action: action!)
+                                studentRecord.setObject(krReference, forKey: "krClass")
+                                print("kr")
                             }
                             
-                          else  {
+                            if (classRecord["Module"] as! String == "cw") {
                                 
-                                studentRecord.setObject(cwReference, forKey: "cwClass2")
-                                print("cwClass2")
-                            }
-                        }
-                        
-                        if (classRecord["Module"] as! String == "ow") {
-                            
-                            let owReference = CKReference(record: classRecord, action: action!)
-                            
-                            if (studentRecord["owClass1"] == nil) {
+                               cwReference = CKReference(record: classRecord, action: action!)
                                 
-                                studentRecord.setObject(owReference, forKey: "owClass1")
-                                print("owClass1")
+                                self.cwReferenceArray.append(cwReference)
+                                print("cwArray")
                                 
                             }
                             
-                            else {
+                            if (classRecord["Module"] as! String == "ow") {
+                                owReference = CKReference(record: classRecord, action: action!)
                                 
-                                studentRecord.setObject(owReference, forKey: "owClass2")
-                                print("owClass2")
+                                self.owReferenceArray.append(owReference)
                                 
+                                print("owArray")
+
                             }
+                            
+                            studentRecord.setObject(self.cwReferenceArray, forKey: "cwClasses")
+                            studentRecord.setObject(self.owReferenceArray, forKey: "owClasses")
+                            print(self.cwReferenceArray.count)
+                            print(self.owReferenceArray.count)
+                            //END OF FOR LOOP
+
                         }
                     
-                    
-                    self.publicDB.saveRecord(studentRecord) { (record :CKRecord?, error :NSError?) in
-                        
-                        print("save record fired")
-                        //self.displayAlertMessage("Enrollment Successful!")
-                        
+                        self.publicDB.saveRecord(studentRecord) { (record :CKRecord?, error :NSError?) in
+                            
+                            print("recordSavedAgain with \(self.cwReferenceArray.count) and \(self.owReferenceArray.count)")
+                            //print(cwReferenceArray.count)
+                            
+                            saveAppointments
+                            
                         }
+                    
+                        //END OF QUERY COMPLETION HANDLER
                     }
+                
+                    //END OF FOR APPOINTMENTS
                 }
             }
         }
-    }
+
+    
 
 //MARK: SignInFunctions
     
@@ -627,19 +614,42 @@ extension UpcomingClassesViewController: JTAppleCalendarViewDataSource, JTAppleC
         if (appointment.moduleType == "kr") {
             
             appointment.appointmentColorCode = self.krColor
-            myOpenWaterCourse?.krAppointment = appointment
+            self.myOpenWaterCourse.krAppointment = appointment
             
         }
         
         else if (appointment.moduleType == "cw") {
             
             appointment.appointmentColorCode = self.cwColor
+            if (self.myOpenWaterCourse.cwAppointment1 == nil) {
+                
+                self.myOpenWaterCourse.cwAppointment1 = appointment
+                
+            }
+            
+            else {
+                
+                self.myOpenWaterCourse.cwAppointment2 = appointment
+                
+            }
             
         }
         
         else if (appointment.moduleType == "ow") {
             
             appointment.appointmentColorCode = self.owColor
+            
+            if (self.myOpenWaterCourse.owAppointment1 == nil) {
+                
+                self.myOpenWaterCourse.owAppointment1 = appointment
+                
+            }
+        
+            else {
+                
+                self.myOpenWaterCourse.owAppointment2 = appointment
+                
+            }
             
         }
         
@@ -651,6 +661,8 @@ extension UpcomingClassesViewController: JTAppleCalendarViewDataSource, JTAppleC
         }
         
         requestedAppointments.append(appointment)
+        
+        print(myOpenWaterCourse)
         
         self.selectedAppointmentsTableView.reloadData()
         
