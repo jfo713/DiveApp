@@ -19,6 +19,19 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
     @IBOutlet weak var saveButtonView :UIButton!
     @IBOutlet weak var clearButtonView :UIButton!
     
+    @IBOutlet weak var chooseYourClassroomView :UIView!
+    @IBOutlet weak var chooseYourFirstCWView :UIView!
+    @IBOutlet weak var chooseYourSecondCWView :UIView!
+    @IBOutlet weak var chooseYourFirstOWView :UIView!
+    @IBOutlet weak var chooseYourSecondOWView :UIView!
+    @IBOutlet weak var monthLabelView :UIView!
+    
+    @IBOutlet weak var chooseYourClassroomLabel :UILabel!
+    @IBOutlet weak var chooseYourFirstCWLabel :UILabel!
+    @IBOutlet weak var chooseYourSecondCWLabel :UILabel!
+    @IBOutlet weak var chooseYourFirstOWLabel :UILabel!
+    @IBOutlet weak var chooseYourSecondOWLabel :UILabel!
+    
     @IBOutlet weak var selectedAppointmentsTableView :UITableView!
     
     let cellReuseIdentifier = "CellView"
@@ -66,9 +79,13 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
         let appointmentObject1 = AppointmentObject()
         appointmentObject1.title = "Pool Appointment"
         
+        
+        
+        //let backgroundImage :UIImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:"backgroundImage"]]
+        
         //self.requestedAppointments.append(appointmentObject1)
         
-        self.selectedAppointmentsTableView.reloadData()
+        //self.selectedAppointmentsTableView.reloadData()
         
         self.populateArrays()
         
@@ -79,8 +96,8 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
         self.signInView.delegate = self
         self.registerView.delegate = self
         
-        selectedAppointmentsTableView.delegate = self
-        selectedAppointmentsTableView.dataSource = self
+//        selectedAppointmentsTableView.delegate = self
+//        selectedAppointmentsTableView.dataSource = self
         
         self.calendarView.cellInset = CGPoint(x: 1, y: 1)
         calendarView.scrollToDate(NSDate(), triggerScrollToDateDelegate: false, animateScroll: false) {
@@ -123,7 +140,7 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
            // bookAppointmentsUserDefaults(requestedAppointments)
             
             fadeView(calendarView)
-            fadeView(selectedAppointmentsTableView)
+            //fadeView(selectedAppointmentsTableView)
             fadeView(monthLabel)
             fadeView(saveButtonView)
             fadeView(clearButtonView)
@@ -144,7 +161,10 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
     @IBAction func clearButton() {
         
         requestedAppointments.removeAll()
-        selectedAppointmentsTableView.reloadData()
+        //selectedAppointmentsTableView.reloadData()
+        
+        resetText()
+        
         NSUserDefaults.standardUserDefaults().setObject("", forKey: "cacheDateArray")
         NSUserDefaults.standardUserDefaults().setBool(false, forKey: "isUserLoggedIn")
         
@@ -224,9 +244,17 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     
-//MARK: SaveBookingFunctions
+    func resetText() {
+        
+        chooseYourClassroomLabel.text = "Choose Your Classroom Date to Start"
+        chooseYourFirstCWLabel.text = "Schedule Your First Pool Class"
+        chooseYourSecondCWLabel.text = "Schedule Your Second Pool Class"
+        chooseYourFirstOWLabel.text = "Plan Your First Day of Lake Diving"
+        chooseYourSecondOWLabel.text = "Plan Your Second Day of Lake Diving"
+        
+    }
     
-
+//MARK: SaveBookingFunctions
     
     func bookDatesCloudKit(appointmentArray :[AppointmentObject]) {
         
@@ -306,8 +334,6 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
             }
         }
 
-    
-
 //MARK: SignInFunctions
     
     func signInViewDidSignIn(userName: String!, password: String!) {
@@ -353,7 +379,7 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
                     self.signInView.usernameTextField.text = ""
                     self.signInView.passwordTextField.text = ""
                     self.unfadeView(self.calendarView)
-                    self.unfadeView(self.selectedAppointmentsTableView)
+                    //self.unfadeView(self.selectedAppointmentsTableView)
                     self.unfadeView(self.saveButtonView)
                     self.unfadeView(self.clearButtonView)
                     self.unfadeView(self.monthLabel)
@@ -399,7 +425,7 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
                     self.registerView.hidden = true
                     self.animateViewToCenter(self.signInView)
                     self.unfadeView(self.calendarView)
-                    self.unfadeView(self.selectedAppointmentsTableView)
+                    //self.unfadeView(self.selectedAppointmentsTableView)
                     self.unfadeView(self.saveButtonView)
                     self.unfadeView(self.clearButtonView)
                     self.unfadeView(self.monthLabel)
@@ -455,6 +481,14 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
 //MARK: AnimationFunctions
     
     override func viewWillAppear(animated: Bool) {
+        
+        let backgroundImage = UIImageView(frame: CGRectMake(0, 0, self.view.frame.width, self.view.frame.height))
+        let image = UIImage(named: "backgroundImage")
+        backgroundImage.image = image
+        
+        //self.view.addSubview(backgroundImage)
+        //self.view.sendSubviewToBack(backgroundImage)
+        
         self.signInView.center.y -= super.view.frame.width
         self.signInView.center.x = super.view.frame.width/2
         self.signInView.layer.cornerRadius = 4
@@ -464,6 +498,47 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
         self.registerView.center.x += super.view.frame.width
         self.registerView.layer.cornerRadius = 4
         self.registerView.backgroundColor = UIColor.lightGrayColor()
+        
+        //self.calendarView.layer.cornerRadius = 2
+        
+        chooseYourClassroomView.backgroundColor = krColor
+        chooseYourFirstCWView.backgroundColor = cwColor
+        chooseYourSecondCWView.backgroundColor = cwColor
+        chooseYourFirstOWView.backgroundColor = owColor
+        chooseYourSecondOWView.backgroundColor = owColor
+        
+        chooseYourClassroomView.alpha = 0.8
+        chooseYourFirstCWView.alpha = 0.8
+        chooseYourSecondCWView.alpha = 0.8
+        chooseYourFirstOWView.alpha = 0.8
+        chooseYourSecondOWView.alpha = 0.8
+        
+        self.chooseYourClassroomView.layer.cornerRadius = 3
+        self.chooseYourFirstCWView.layer.cornerRadius = 3
+        self.chooseYourSecondCWView.layer.cornerRadius = 3
+        self.chooseYourFirstOWView.layer.cornerRadius = 3
+        self.chooseYourSecondOWView.layer.cornerRadius = 3
+        
+        makeShadow(self.calendarView, shadowSize: 3)
+        
+        makeShadow(self.chooseYourClassroomView, shadowSize: 1)
+        makeShadow(self.chooseYourFirstCWView, shadowSize: 1)
+        makeShadow(self.chooseYourSecondCWView, shadowSize: 1)
+        makeShadow(self.chooseYourFirstOWView, shadowSize: 1)
+        makeShadow(self.chooseYourSecondOWView, shadowSize: 1)
+        makeShadow(self.monthLabelView, shadowSize: 1)
+        
+        
+    }
+    
+    func makeShadow(view :UIView, shadowSize :CGFloat) {
+        
+        view.layer.shadowColor = UIColor.blackColor().CGColor
+        view.layer.shadowOpacity = 0.5
+        view.layer.shadowOffset = CGSizeZero
+        view.layer.shadowRadius = shadowSize
+        view.layer.shouldRasterize = true
+        
         
     }
     
@@ -604,6 +679,7 @@ extension UpcomingClassesViewController: JTAppleCalendarViewDataSource, JTAppleC
         
         let appointment = AppointmentObject() 
         appointment.appointmentDate = date
+        appointment.appointmentDisplayText = appointment.appointmentDate?.toDisplayText()
         
         formatter.dateFormat = "dd/MM/yyyy"
         appointment.appointmentDateString = formatter.stringFromDate(date)
@@ -616,6 +692,10 @@ extension UpcomingClassesViewController: JTAppleCalendarViewDataSource, JTAppleC
             appointment.appointmentColorCode = self.krColor
             self.myOpenWaterCourse.krAppointment = appointment
             
+            self.chooseYourClassroomView.alpha = 1
+            
+            self.chooseYourClassroomLabel.text = "Classroom: \(self.myOpenWaterCourse.krAppointment!.appointmentDisplayText!)"
+            
         }
         
         else if (appointment.moduleType == "cw") {
@@ -625,11 +705,19 @@ extension UpcomingClassesViewController: JTAppleCalendarViewDataSource, JTAppleC
                 
                 self.myOpenWaterCourse.cwAppointment1 = appointment
                 
+                self.chooseYourFirstCWView.alpha = 1
+                
+                self.chooseYourFirstCWLabel.text = "Pool 1: \(self.myOpenWaterCourse.cwAppointment1!.appointmentDisplayText!)"
+                
             }
             
             else {
                 
                 self.myOpenWaterCourse.cwAppointment2 = appointment
+                
+                self.chooseYourSecondCWView.alpha = 1
+                
+                self.chooseYourSecondCWLabel.text = "Pool 2: \(self.myOpenWaterCourse.cwAppointment2!.appointmentDisplayText!)"
                 
             }
             
@@ -643,11 +731,19 @@ extension UpcomingClassesViewController: JTAppleCalendarViewDataSource, JTAppleC
                 
                 self.myOpenWaterCourse.owAppointment1 = appointment
                 
+                self.chooseYourFirstOWView.alpha = 1
+                
+                self.chooseYourFirstOWLabel.text = "Lake Day 1: \(self.myOpenWaterCourse.owAppointment1!.appointmentDisplayText!)"
+                
             }
         
             else {
                 
                 self.myOpenWaterCourse.owAppointment2 = appointment
+                
+                self.chooseYourSecondOWView.alpha = 1
+                
+                self.chooseYourSecondOWLabel.text = "Lake Day 2: \(self.myOpenWaterCourse.owAppointment2!.appointmentDisplayText!)"
                 
             }
             
@@ -664,7 +760,7 @@ extension UpcomingClassesViewController: JTAppleCalendarViewDataSource, JTAppleC
         
         print(myOpenWaterCourse)
         
-        self.selectedAppointmentsTableView.reloadData()
+        //self.selectedAppointmentsTableView.reloadData()
         
     }
     
@@ -723,6 +819,8 @@ extension UpcomingClassesViewController: JTAppleCalendarViewDataSource, JTAppleC
     }
     
     func calendar(calendar: JTAppleCalendarView, isAboutToDisplaySectionHeader header: JTAppleHeaderView, date: (startDate: NSDate, endDate: NSDate), identifier: String) {
+        
+        header.layer.cornerRadius = 2
     }
     
 }

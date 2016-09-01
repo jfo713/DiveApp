@@ -11,11 +11,22 @@ import JTAppleCalendar
 
 
 
-class CellView: JTAppleDayCellView {
+@IBDesignable class CellView: JTAppleDayCellView {
     
     @IBOutlet weak var dayLabel :UILabel!
     @IBOutlet weak var selectedView :AnimationView!
     @IBInspectable var normalDayColor  :UIColor!
+    @IBInspectable var cornerRadius :CGFloat = 0 {
+        
+        didSet {
+            
+            layer.cornerRadius = cornerRadius
+            
+        }
+        
+    }
+    
+    
     
     let krColor = UIColor.yellowColor()
     let cwColor = UIColor.greenColor()
@@ -23,9 +34,11 @@ class CellView: JTAppleDayCellView {
     
     var cellModuleType :String?
     
-    let textSelectedColor = UIColor(hue: 0.425, saturation: 0.55, brightness: 0.34, alpha: 1.0)
-    let textDeselectedColor = UIColor(hue: 0.4417, saturation: 0.15, brightness: 1, alpha: 1.0)
-    let previousMonthTextColor = UIColor(hue: 0.3694, saturation: 0.38, brightness: 0.57, alpha: 1.0)
+    
+    
+    //let textSelectedColor = UIColor(hue: 0.425, saturation: 0.55, brightness: 0.34, alpha: 1.0)
+    //let textDeselectedColor = UIColor(hue: 0.4417, saturation: 0.15, brightness: 1, alpha: 1.0)
+    //let previousMonthTextColor = UIColor(hue: 0.3694, saturation: 0.38, brightness: 0.57, alpha: 1.0)
     lazy var todayDate : String = {
         [weak self] in
         let aString = self!.c.stringFromDate(NSDate())
@@ -39,6 +52,8 @@ class CellView: JTAppleDayCellView {
     }()
     
     func setupCellBeforeDisplay(cellState: CellState, date: NSDate) {
+        
+        
         
         dayLabel.text = cellState.text
         
