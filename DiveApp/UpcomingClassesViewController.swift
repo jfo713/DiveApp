@@ -267,13 +267,19 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
                 fatalError("Username not found")
             }
             
+            
+            
             let action = CKReferenceAction(rawValue: 1)
             let diverReference = CKReference(record: diverRecord, action: action!)
             let studentRecord = CKRecord(recordType: "UserClasses")
             studentRecord.setObject(diverReference, forKey: "Student")
 
+            var counter :Int = 0
+            
             for appointment in appointmentArray {
-                    
+                
+                
+                
                 let classPredicate = NSPredicate(format: "Module = %@ AND DateString = %@", appointment.moduleType!, appointment.appointmentDateString!)
                 let classQuery = CKQuery(recordType: "Classes", predicate: classPredicate)
                 self.publicDB.performQuery(classQuery, inZoneWithID: nil) { (classRecords: [CKRecord]?, error: NSError?) in
@@ -284,6 +290,8 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
                 let saveAppointments = CKModifyRecordsOperation(recordsToSave: classRecords, recordIDsToDelete: nil)
             
                         for classRecord in classRecords! {
+                            
+                            counter += 1
                             
                             if (classRecord["Module"] as! String == "kr") {
                                 let krReference = CKReference(record: classRecord, action: action!)
@@ -296,7 +304,7 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
                                cwReference = CKReference(record: classRecord, action: action!)
                                 
                                 self.cwReferenceArray.append(cwReference)
-                                print("cwArray")
+                                print("cwArray with \(self.cwReferenceArray.count)")
                                 
                             }
                             
@@ -314,17 +322,24 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
                             print(self.cwReferenceArray.count)
                             print(self.owReferenceArray.count)
                             //END OF FOR LOOP
+                            
+                            if counter == appointmentArray.count {
+                                
+                                self.publicDB.saveRecord(studentRecord) { (record :CKRecord?, error :NSError?) in
+                                    
+                                    print("recordSavedAgain with \(self.cwReferenceArray.count) and \(self.owReferenceArray.count)")
+                                    
+                                    
+                                    saveAppointments
+                                    
+                                    counter = 0
+                                }
+                                
+                            }
 
                         }
                     
-                        self.publicDB.saveRecord(studentRecord) { (record :CKRecord?, error :NSError?) in
-                            
-                            print("recordSavedAgain with \(self.cwReferenceArray.count) and \(self.owReferenceArray.count)")
-                            //print(cwReferenceArray.count)
-                            
-                            saveAppointments
-                            
-                        }
+                 
                     
                         //END OF QUERY COMPLETION HANDLER
                     }
@@ -488,6 +503,8 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
         
         //self.view.addSubview(backgroundImage)
         //self.view.sendSubviewToBack(backgroundImage)
+        
+        self.view.backgroundColor = UIColor.darkGrayColor()
         
         self.signInView.center.y -= super.view.frame.width
         self.signInView.center.x = super.view.frame.width/2

@@ -10,12 +10,124 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DiveApp/UpcomingClassesViewController.swift"
-            timestampString = "494445085.747336"
+            timestampString = "494901585.483099"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "132"
-            endingLineNumber = "132"
+            startingLineNumber = "143"
+            endingLineNumber = "143"
             landmarkName = "saveButton()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "DiveApp/UpcomingClassesViewController.swift"
+            timestampString = "494954912.822571"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "115"
+            endingLineNumber = "115"
+            landmarkName = "changeToRegisterView()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "DiveApp/UpcomingClassesViewController.swift"
+            timestampString = "494956387.225684"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "292"
+            endingLineNumber = "292"
+            landmarkName = "bookDatesCloudKit(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "DiveApp/UpcomingClassesViewController.swift"
+            timestampString = "494956387.225684"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "306"
+            endingLineNumber = "306"
+            landmarkName = "bookDatesCloudKit(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "DiveApp/UpcomingClassesViewController.swift"
+            timestampString = "494956500.822716"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "342"
+            endingLineNumber = "342"
+            landmarkName = "bookDatesCloudKit(_:)"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "DiveApp.UpcomingClassesViewController.(bookDatesCloudKit (Swift.Array&lt;DiveApp.AppointmentObject&gt;) -&gt; ()).(closure #1)"
+                  moduleName = "DiveApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Hal/Documents/TIY%20Houston/DiveApp/DiveApp/DiveApp/UpcomingClassesViewController.swift"
+                  timestampString = "494956617.598634"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "345"
+                  endingLineNumber = "345"
+                  offsetFromSymbolStart = "3047">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "DiveApp.UpcomingClassesViewController.(bookDatesCloudKit (Swift.Array&lt;DiveApp.AppointmentObject&gt;) -&gt; ()).(closure #1).(closure #1)"
+                  moduleName = "DiveApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Hal/Documents/TIY%20Houston/DiveApp/DiveApp/DiveApp/UpcomingClassesViewController.swift"
+                  timestampString = "494956617.598911"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "345"
+                  endingLineNumber = "345"
+                  offsetFromSymbolStart = "5881">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "DiveApp/UpcomingClassesViewController.swift"
+            timestampString = "494956536.766826"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "326"
+            endingLineNumber = "326"
+            landmarkName = "bookDatesCloudKit(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
