@@ -162,6 +162,11 @@ class UpcomingClassesViewController: UIViewController, UITableViewDelegate, UITa
         
         requestedAppointments.removeAll()
         //selectedAppointmentsTableView.reloadData()
+        myOpenWaterCourse.cwAppointment1 = nil
+        myOpenWaterCourse.cwAppointment2 = nil
+        myOpenWaterCourse.owAppointment1 = nil
+        myOpenWaterCourse.owAppointment2 = nil
+        myOpenWaterCourse.krAppointment = nil
         
         resetText()
         
